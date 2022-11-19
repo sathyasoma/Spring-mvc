@@ -1,0 +1,138 @@
+
+
+
+*Spring MVC Framework follows the Model-View-Controller design pattern.
+* It is used to develop web applications.
+*It works around DispatcherServlet.
+* DispatcherServlet handles all the HTTP requests and responses. It dispatches the requests to handlers.
+*t uses @Controller and @RequestMapping as default request handlers. 
+* The @Controller annotation defines that a particular class is a controller.
+*@RequestMapping annotation maps web requests to Spring Controller methods. 
+
+
+Model: The Model encapsulates the application data.
+View: View renders the model data and also generates HTML output that the client’s browser can interpret.
+Controller: The Controller processes the user requests and passes them to the view for rendering.
+
+
+
+Web.xml:
+========
+
+
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  
+  <servlet>    
+    <servlet-name>login</servlet-name>    
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>    
+    <load-on-startup>1</load-on-startup>      
+</servlet>    
+<servlet-mapping>    
+    <servlet-name>login</servlet-name>    
+    <url-pattern>/</url-pattern>    
+</servlet-mapping>   
+</web-app>
+
+
+
+index.jsp:
+==========
+
+<html>
+<body>
+<h2>hello welcome to mvc projects</h2>
+
+<form action="add">
+
+<input type="text" name="t1"><br><br>
+<input type="text" name="t2"><br> 
+<input type="submit">
+</form>
+</body>
+</html>
+
+
+
+java file:
+=========
+package com.springmvc.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class HelloController {
+	
+	@RequestMapping("/add")
+	public ModelAndView display(HttpServletRequest request, HttpServletResponse response)
+	{
+		int i=Integer.parseInt(request.getParameter("t1"));
+		int j=Integer.parseInt(request.getParameter("t2"));
+		
+		int k=i+j;
+		
+		ModelAndView mv= new ModelAndView();
+		
+		mv.setViewName("display.jsp");
+		mv.addObject("result", k);
+		
+		return mv;
+	}
+
+}
+
+
+spring-servlet.xml:
+====================
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc" 
+    xmlns:ctx="http://www.springframework.org/schema/context" 
+    xsi:schemaLocation="  
+        http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context.xsd  
+        http://www.springframework.org/schema/mvc  
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">  
+  
+
+    <!-- Provide support for component scanning -->  
+    <ctx:annotation-config></ctx:annotation-config>
+    <context:component-scan base-package="com.springmvc.controller"></context:component-scan>  
+  
+    <!--Provide support for conversion, formatting and validation -->  
+    <mvc:annotation-driven/>  
+  
+</beans>  
+
+
+display.jsp:
+=========
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" isELIgnored="false"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%-- Result is : <%= request.getAttribute("result") %> --%>
+
+Result is: ${result}
+</body>
+</html>
